@@ -1,0 +1,27 @@
+local Players = game:GetService("Players")
+
+-- Function to highlight a player
+local function HighlightPlayer(player)
+    local character = player.Character or player.CharacterAdded:Wait()
+    local highlight = Instance.new("Highlight")
+    highlight.Parent = character
+    highlight.Adornee = character
+    -- Customize highlight appearance here (e.g., color, outline, etc.)
+end
+
+-- Function to remove highlight from a player
+local function RemoveHighlight(player)
+    local character = player.Character
+    if character and character:FindFirstChild("Highlight") then
+        character:FindFirstChild("Highlight"):Destroy()
+    end
+end
+
+-- Highlight all players on script start
+for _, player in pairs(Players:GetPlayers()) do
+    HighlightPlayer(player)
+end
+
+-- Update highlights when players join or leave
+Players.PlayerAdded:Connect(HighlightPlayer)
+Players.PlayerRemoving:Connect(RemoveHighlight)
