@@ -1,3 +1,5 @@
+-- This script is compatible with Roblox executor Solara
+
 local Players = game:GetService("Players")
 
 -- Function to highlight a player
@@ -6,22 +8,14 @@ local function HighlightPlayer(player)
     local highlight = Instance.new("Highlight")
     highlight.Parent = character
     highlight.Adornee = character
-    -- Customize highlight appearance here (e.g., color, outline, etc.)
+    highlight.Color = Color3.fromRGB(255, 255, 0) -- Yellow highlight
 end
 
--- Function to remove highlight from a player
-local function RemoveHighlight(player)
-    local character = player.Character
-    if character and character:FindFirstChild("Highlight") then
-        character:FindFirstChild("Highlight"):Destroy()
-    end
-end
-
--- Highlight all players on script start
+-- Highlight all players in the lobby
 for _, player in pairs(Players:GetPlayers()) do
     HighlightPlayer(player)
 end
 
--- Update highlights when players join or leave
+-- Highlight new players
 Players.PlayerAdded:Connect(HighlightPlayer)
-Players.PlayerRemoving:Connect(RemoveHighlight)
+
