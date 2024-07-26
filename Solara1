@@ -1,22 +1,27 @@
 local Players = game:GetService("Players")
-local Teams = game:GetService("Teams")
 
-local function highlightPlayer(player)
+-- Function to highlight a player
+local function HighlightPlayer(player)
     local character = player.Character or player.CharacterAdded:Wait()
-    local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
-
     local highlight = Instance.new("Highlight")
-    highlight.Parent = game.CoreGui
-    highlight.Adornee = humanoidRootPart
-    highlight.FillColor = player.TeamColor
-
-    player.CharacterAdded:Connect(function(newCharacter)
-        highlight.Adornee = newCharacter:WaitForChild("HumanoidRootPart")
-    end)
+    highlight.Parent = character
+    highlight.Adornee = character
+    -- Customize highlight appearance here (e.g., color, outline, etc.)
 end
 
+-- Function to remove highlight from a player
+local function RemoveHighlight(player)
+    local character = player.Character
+    if character and character:FindFirstChild("Highlight") then
+        character:FindFirstChild("Highlight"):Destroy()
+    end
+end
+
+-- Highlight all players on script start
 for _, player in pairs(Players:GetPlayers()) do
-    highlightPlayer(player)
+    HighlightPlayer(player)
 end
 
-Players.PlayerAdded:Connect(highlightPlayer)
+-- Update highlights when players join or leave
+Players.PlayerAdded:Connect(HighlightPlayer)
+Players.PlayerRemoving:Connect(RemoveHighlight)
