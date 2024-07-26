@@ -1,18 +1,22 @@
 local Players = game:GetService("Players")
+local Teams = game:GetService("Teams")
 
-local highlight = Instance.new("Highlight")
-highlight.Parent = game.CoreGui
-
-for _, player in pairs(Players:GetPlayers()) do
+local function highlightPlayer(player)
     local character = player.Character or player.CharacterAdded:Wait()
     local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
 
-    highlight:Clone().Adornee = humanoidRootPart
+    local highlight = Instance.new("Highlight")
+    highlight.Parent = game.CoreGui
+    highlight.Adornee = humanoidRootPart
+    highlight.FillColor = player.TeamColor
+
+    player.CharacterAdded:Connect(function(newCharacter)
+        highlight.Adornee = newCharacter:WaitForChild("HumanoidRootPart")
+    end)
 end
 
-Players.PlayerAdded:Connect(function(player)
-    local character = player.Character or player.CharacterAdded:Wait()
-    local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+for _, player in pairs(Players:GetPlayers()) do
+    highlightPlayer(player)
+end
 
-    highlight:Clone().Adornee = humanoidRootPart
-end)
+Players.PlayerAdded:Connect(highlightPlayer)
