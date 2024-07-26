@@ -1,22 +1,50 @@
+-- LocalScript to highlight all players in Roblox
+
+-- Make sure to place this script in StarterPlayerScripts or StarterCharacterScripts
+
+-- Get the necessary services
 local Players = game:GetService("Players")
-local Highlight = script.Parent -- Assuming Highlight is a child of the script
+local RunService = game:GetService("RunService")
 
-for _, player in pairs(Players:GetPlayers()) do
+-- Create a function to highlight a player
+local function highlightPlayer(player)
+    -- Wait for the player's character to be loaded
     local character = player.Character or player.CharacterAdded:Wait()
-    local humanoidRootPart = character:WaitForChild("HumanoidRootPart")   
-
-
-    local highlight = Highlight:Clone()
-    highlight.Parent = humanoidRootPart
-    highlight.Adornee = humanoidRootPart
+    -- Wait for the character's model to be fully loaded
+    local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+    
+    -- Create a Highlight instance
+    local highlight = Instance.new("Highlight")
+    highlight.Name = "PlayerHighlight"
+    highlight.Parent = character
+    highlight.Adornee = character
+    highlight.FillColor = Color3.fromRGB(255, 0, 0)  -- Highlight color (red)
+    highlight.OutlineColor = Color3.fromRGB(0, 0, 0)  -- Outline color (black)
+    highlight.OutlineTransparency = 0.5
+    highlight.FillTransparency = 0.3
+    
+    -- Remove the highlight when the player leaves
+    player.CharacterRemoving:Connect(function()
+        if highlight then
+            highlight:Destroy()
+        end
+    end)
 end
 
+-- Function to remove highlight from a player
+local function removeHighlight(player)
+    local character = player.Character
+    if character then
+        local highlight = character:FindFirstChild("PlayerHighlight")
+        if highlight then
+            highlight:Destroy()
+        end
+    end
+end
+
+-- Connect to the PlayerAdded event
 Players.PlayerAdded:Connect(function(player)
-    local character = player.Character or player.CharacterAdded:Wait()
-    local humanoidRootPart = character:WaitForChild("HumanoidRootPart")   
-
-
-    local highlight = Highlight:Clone()
-    highlight.Parent = humanoidRootPart
-    highlight.Adornee = humanoidRootPart
+    highlightPlayer(player)
 end)
+
+-- Co
