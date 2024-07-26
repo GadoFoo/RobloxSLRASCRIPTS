@@ -1,0 +1,22 @@
+local Players = game:GetService("Players")
+local Highlight = script.Parent -- Assuming Highlight is a child of the script
+
+for _, player in pairs(Players:GetPlayers()) do
+    local character = player.Character or player.CharacterAdded:Wait()
+    local humanoidRootPart = character:WaitForChild("HumanoidRootPart")   
+
+
+    local highlight = Highlight:Clone()
+    highlight.Parent = humanoidRootPart
+    highlight.Adornee = humanoidRootPart
+end
+
+Players.PlayerAdded:Connect(function(player)
+    local character = player.Character or player.CharacterAdded:Wait()
+    local humanoidRootPart = character:WaitForChild("HumanoidRootPart")   
+
+
+    local highlight = Highlight:Clone()
+    highlight.Parent = humanoidRootPart
+    highlight.Adornee = humanoidRootPart
+end)
